@@ -5,4 +5,7 @@ class MapManager(models.GeoManager):
     def visible(self, request):
         filter = Q(share_status=self.model.PUBLIC)
 
+        if request.user.is_authenticated():
+            filter = filter | Q(share_status=self.model.INTERN)
+
         return self.filter(filter)

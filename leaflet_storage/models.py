@@ -109,6 +109,7 @@ class Map(NamedModel):
     PUBLIC = 1
     OPEN = 2
     PRIVATE = 3
+    INTERN = 4
     EDIT_STATUS = (
         (ANONYMOUS, _('Everyone can edit')),
         (EDITORS, _('Only editors can edit')),
@@ -116,6 +117,7 @@ class Map(NamedModel):
     )
     SHARE_STATUS = (
         (PUBLIC, _('everyone (public)')),
+        (INTERN, _('logged-in users')),
         (OPEN, _('anyone with link')),
         (PRIVATE, _('editors only')),
     )
@@ -190,6 +192,8 @@ class Map(NamedModel):
         if self.owner is None:
             can = True
         elif self.share_status in [self.PUBLIC, self.OPEN]:
+            can = True
+        elif self.share_status in [self.INTERN] and request.user.is_authenticated():
             can = True
         elif request.user == self.owner:
             can = True
