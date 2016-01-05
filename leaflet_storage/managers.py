@@ -8,5 +8,6 @@ class MapManager(models.GeoManager):
         if request.user.is_authenticated():
             filter = filter | Q(owner=request.user)
             filter = filter | Q(editors=request.user)
+            filter = filter | Q(share_status=self.model.INTERN)
 
         return self.filter(filter)
